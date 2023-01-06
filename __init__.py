@@ -1,4 +1,5 @@
 from os.path import join, dirname
+import random
 
 from ovos_plugin_common_play.ocp import MediaType, PlaybackType
 from ovos_utils.log import LOG
@@ -22,12 +23,14 @@ class DeepCDigitalSkill(OVOSCommonPlaybackSkill):
                                                           "Movie Preview", "soundtrack", " OST", "opening theme"])
 
     def initialize(self):
-        url = "https://www.youtube.com/channel/UC-b1LXc71wj0rMVQOWw-UfQ"
         bootstrap = "https://github.com/JarbasSkills/skill-deepcdigital/raw/dev/bootstrap.json"
         self.archive.bootstrap_from_url(bootstrap)
-        self.archive.monitor(url)
-        self.archive.setDaemon(True)
-        self.archive.start()
+        self.schedule_event(self._sync_db, random.randint(3600, 24 * 3600))
+
+    def _sync_db(self):
+        url = "https://www.youtube.com/channel/UC-b1LXc71wj0rMVQOWw-UfQ"
+        self.archive.parse_videos(url)
+        self.schedule_event(self._sync_db, random.randint(3600, 24*3600))
 
     # matching
     def match_skill(self, phrase, media_type):
