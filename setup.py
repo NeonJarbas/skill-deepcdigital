@@ -14,7 +14,7 @@ setup(
     author_email='jarbasai@mailfence.com',
     license='Apache-2.0',
     package_dir={"skill_deepcdigital": ""},
-    package_data={'skill_deepcdigital': ['locale/*', 'ui/*']},
+    package_data={'skill_deepcdigital': ['locale/*', 'res/*']},
     packages=['skill_deepcdigital'],
     include_package_data=True,
     install_requires=["ovos_workshop~=0.0.5a1"],

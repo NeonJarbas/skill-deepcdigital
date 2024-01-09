@@ -12,8 +12,9 @@ from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
 class DeepCDigitalSkill(OVOSCommonPlaybackSkill):
     def __init__(self, *args, **kwargs):
         self.supported_media = [MediaType.MOVIE]
-        self.skill_icon = self.default_bg = join(dirname(__file__), "ui", "deepcdigital_icon.jpg")
+        self.skill_icon = self.default_bg = join(dirname(__file__), "res", "deepcdigital_icon.jpg")
         self.archive = JsonStorageXDG("DeepCDigitalMovies", subfolder="OCP")
+        self.media_type_exceptions = {}
         super().__init__(*args, **kwargs)
 
     def initialize(self):
@@ -25,7 +26,6 @@ class DeepCDigitalSkill(OVOSCommonPlaybackSkill):
         data = requests.get(bootstrap).json()
         self.archive.merge(data)
         self.schedule_event(self._sync_db, random.randint(3600, 24 * 3600))
-        self.media_type_exceptions = {}
 
     def load_ocp_keywords(self):
         title = []
@@ -34,7 +34,6 @@ class DeepCDigitalSkill(OVOSCommonPlaybackSkill):
         for url, data in self.archive.items():
             t = data["title"].split("|")[0].split("(")[0].strip().strip("¿?.!").rstrip("¿")
             if "documentary" in data["title"].lower():
-                print(t)
                 docus.append(t)
                 # signal this entry as DOCUMENTARY media type
                 # in case it gets selected later
